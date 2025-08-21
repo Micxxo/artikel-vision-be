@@ -15,7 +15,16 @@ var validate = validator.New()
 func Index(c *fiber.Ctx) error {
 	var articles []models.Post
 
-	pagination, err := utils.Paginate(c, databases.DB, &articles)
+	// Ambil query parameter "status" jika ada
+	status := c.Query("status")
+
+	query := databases.DB.Model(&articles)
+	if status != "" {
+		query = query.Where("status = ?", status)
+	}
+
+	// Paginasi dengan query yang sudah difilter
+	pagination, err := utils.Paginate(c, query, &articles)
 	if err != nil {
 		return helpers.SendErrorResponse(c, fiber.StatusInternalServerError, err.Error())
 	}

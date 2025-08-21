@@ -8,6 +8,7 @@ import (
 	"github.com/Micxxo/artikel-vision-be/migrations"
 	"github.com/Micxxo/artikel-vision-be/routes"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -30,6 +31,12 @@ func main() {
 	}
 
 	app := fiber.New()
+
+	// CORS middleware
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS,PATCH",
+	}))
 
 	// routes
 	api := app.Group("/api")
